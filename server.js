@@ -9,6 +9,7 @@ const path      = require('path');
 
 const itemsRouter   = require('./routes/items');
 const contactRouter = require('./routes/contact');
+const authRouter    = require('./routes/auth');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -21,8 +22,8 @@ app.use(helmet({
 // ── CORS — allow your frontend to talk to this server ─────────────────────────
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type']
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // ── Rate limiting — prevent spam/abuse ───────────────────────────────────────
@@ -42,6 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── API Routes ────────────────────────────────────────────────────────────────
+app.use('/api/auth',    authRouter);
 app.use('/api/items',   itemsRouter);
 app.use('/api/contact', contactRouter);
 
